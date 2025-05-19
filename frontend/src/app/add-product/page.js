@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 
 export default function AddProduct() {
   const router = useRouter();
+  
   const [form, setForm] = useState({
     name: "",
     description: "",
@@ -15,27 +16,45 @@ export default function AddProduct() {
 
   const [errors, setErrors] = useState({});
 
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    const newValue = type === "checkbox" ? checked : value;
     
+
+const handleChange = (e) => {
+  const { name, value, type, checked } = e.target;
+  const newValue = type === "checkbox" ? checked :value;
+
+  // Validaciones por campo
+  let errorMsg = "";
 
   if (name === "price") {
     const numericValue = parseFloat(value);
-
-    if (numericValue < 0) {
-      setErrors({...errors,price: "El precio debe ser un número positivo",});
+    if (isNaN(numericValue) || numericValue < 0) {
+      errorMsg = "El precio debe ser un número positivo";
+      setErrors({...errors, [name]: errorMsg });
       return;
-    } else {
-      setErrors({...errors,price: "",});
+    } 
+  }
+
+  if (name === "name") {
+    if (value.trim().length < 3) {
+      errorMsg = "El nombre debe tener al menos 3 caracteres";
     }
   }
-      setForm({...form,[name]: newValue,});
-  };
 
+  if (name === "description") {
+    if (value.trim().length === 0) {
+      errorMsg = "La descripción no puede estar vacía";
+    }
+  }
+  setErrors({...errors, [name]: errorMsg });
+  setForm({...form, [name]: newValue });
+};
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      if(form.name.length < 3 || form.description.length === 0 || parseFloat(form.price) < 0){
+        alert("Algunos campos necesitan ser atendidos");
+        return; 
+      }
       await addProduct(form);
       alert("Producto agregado correctamente");
       router.push("/");
@@ -56,13 +75,15 @@ export default function AddProduct() {
           Agregar producto
         </h2>
         {errors.price && <p className="text-red-600 text-sm col-span-12">- {errors.price}</p>}
+        {errors.description && <p className="text-red-600 text-sm col-span-12">- {errors.description}</p>}
+        {errors.name && <p className="text-red-600 text-sm col-span-12">- {errors.name}</p>}
         <input
           className="col-span-6 p-1 border border-gray-300 rounded"
           name="name"
           placeholder="Nombre"
           value={form.name}
           onChange={handleChange}
-          required
+          
         />
         <input
           className="col-span-12 md:col-span-6 p-2 border border-gray-300 rounded"
@@ -70,7 +91,7 @@ export default function AddProduct() {
           placeholder="Descripción corta"
           value={form.description}
           onChange={handleChange}
-          required
+          
         />
         <input
           className="col-span-6 p-2 border border-gray-300 rounded"
@@ -79,7 +100,7 @@ export default function AddProduct() {
           placeholder="Precio"
           value={form.price}
           onChange={handleChange}
-          required
+          
         />
         
 

@@ -25,7 +25,7 @@ export default function AddProduct() {
 
     if (name === "price") {
       const numericValue = parseFloat(value);
-      if (isNaN(numericValue) || numericValue < 0) {
+      if (isNaN(numericValue) && numericValue < 0) {
         errorMsg = "El precio debe ser un número positivo";
         setErrors({ ...errors, [name]: errorMsg });
         return;

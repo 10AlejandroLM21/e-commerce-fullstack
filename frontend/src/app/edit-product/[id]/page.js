@@ -41,42 +41,44 @@ export default function EditProduct() {
 
     if (name === "price") {
       const priceValue = parseFloat(value);
-      if(priceValue < 0){
-      errorMsg = "El valor del precio no puede ser negativo";
-      setErrors({...errors,price: errorMsg});
-      return;
+      if (priceValue < 0) {
+        errorMsg = "El valor del precio no puede ser negativo";
+        setErrors({ ...errors, price: errorMsg });
+        return;
       }
     }
 
-    if(name === "name"){
-      if(value.trim().length <= 0){
+    if (name === "name") {
+      if (value.trim().length <= 0) {
         errorMsg = "El nombre del producto no puede estar vacío";
       }
     }
 
-    if(name === "description"){
-      if(value.trim().length < 5){
-        errorMsg = "La descripción del producto no puede ser menor a 5 caracteres";
+    if (name === "description") {
+      if (value.trim().length < 5) {
+        errorMsg =
+          "La descripción del producto no puede ser menor a 5 caracteres";
       }
     }
 
-    setErrors({...errors,[name]:errorMsg});
+    setErrors({ ...errors, [name]: errorMsg });
     setForm({ ...form, [name]: newValue });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      if(form.name.length < 5 || form.description.length === 0 || parseFloat(form.price) < 0){
-        alert("Algunos campos necesitan ser atendidos");
-        return; 
-      }
       await updateProduct(id, form);
       alert("Producto actualizado");
       router.push("/");
     } catch (error) {
-      alert("Error al actualizar");
-      console.error(error);
+      if (error.name || error.description || error.price) {
+        alert("algunos campos requiren ser atendidos");
+        setErrors(error);
+      } else {
+        alert("Error al actualizar");
+        console.error(error);
+      }
     }
   };
 
@@ -86,16 +88,16 @@ export default function EditProduct() {
         <h2 className="col-span-12 text-center mb-6 font-bold text-4xl">
           Editar producto
         </h2>
-        {errors.price && <p className="text-red-400 text-sm col-span-12">- {errors.price}</p>}
         {errors.description && <p className="text-red-400 text-sm col-span-12">{errors.description}</p>}
-        {errors.name && <p className = "text-red-400 text-sm col-span-12">{errors.name}</p>}
+        {errors.name && <p className="text-red-400 text-sm col-span-12">{errors.name}</p>}
+        {errors.price && <p className= "text-red-400 text-sm col-span-12" >{errors.price}</p>}
+
         <input
           className="col-span-12 md:col-span-6 border border-gray-400 p-2 rounded"
           name="name"
           placeholder="Nombre"
           value={form.name}
           onChange={handleChange}
-          
         />
         <input
           className="col-span-12 md:col-span-6 border border-gray-400 p-2 rounded"
@@ -103,7 +105,6 @@ export default function EditProduct() {
           placeholder="Descripcion"
           value={form.description}
           onChange={handleChange}
-          
         />
         <input
           className="col-span-12 md:col-span-6 border border-gray-400 p-2 rounded"
@@ -112,7 +113,6 @@ export default function EditProduct() {
           placeholder="Precio"
           value={form.price}
           onChange={handleChange}
-          
         />
         <label className="col-span-12 md:col-span-6 gap-2 flex items-center">
           <input

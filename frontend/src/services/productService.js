@@ -31,6 +31,12 @@ export async function updateProduct(id, updatedProduct) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(updatedProduct),
   });
+
+  if (!res.ok) {
+    const errorData = await res.json();
+    throw errorData;
+  }
+
   return await res.json();
 }
 

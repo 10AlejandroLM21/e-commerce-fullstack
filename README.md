@@ -44,7 +44,7 @@ Asegúrate de tener instalado:
 2. Ejecuta el servidor con Maven Wrapper:
 
    ```bash
-   ./mvnw spring-boot:run
+   mvnw spring-boot:run
    ```
 
 3. La API estará disponible en:
@@ -98,18 +98,6 @@ Este proyecto utiliza **Spring Data JPA** y una base de datos **persistente en A
    http://localhost:3000
    ```
 
----
-
-## 🔗 Conexión Frontend - Backend
-
-Asegúrate de que el frontend haga peticiones a la URL correcta del backend (`http://localhost:8080`).  
-Puedes configurar la URL base en un archivo `.env.local` dentro del directorio `frontend`:
-
-```
-NEXT_PUBLIC_API_URL=http://localhost:8080/api
-```
-
----
 
 ## 🧑‍💻 Autor
 

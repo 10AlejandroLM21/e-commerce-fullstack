@@ -51,16 +51,23 @@ const handleChange = (e) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      if(form.name.length < 3 || form.description.length === 0 || parseFloat(form.price) < 0){
-        alert("Algunos campos necesitan ser atendidos");
-        return; 
-      }
+      // if(form.name.length < 3 || form.description.length === 0 || parseFloat(form.price) < 0){
+      //   alert("Algunos campos necesitan ser atendidos");
+      //   return; 
+      // }
       await addProduct(form);
       alert("Producto agregado correctamente");
       router.push("/");
     } catch (error) {
-      alert("Error al agregar producto");
-      console.error(error);
+      if(error.name || error.price || error.description){
+         console.log("Error producido back:" + error);
+        setErrors(error);
+      }else{
+          alert("Ocurrió un error inesperado");
+        console.log("Error producido:" + error);
+      }
+      
+      
     }
   };
 

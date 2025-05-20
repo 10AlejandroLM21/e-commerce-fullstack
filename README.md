@@ -57,11 +57,11 @@ Asegúrate de tener instalado:
 
 | Método | Endpoint              | Descripción                |
 |--------|-----------------------|----------------------------|
-| GET    | `/api/products`       | Listar productos           |
-| GET    | `/api/products/{id}`  | Obtener producto por ID    |
-| POST   | `/api/products`       | Crear nuevo producto       |
-| PUT    | `/api/products/{id}`  | Actualizar producto        |
-| DELETE | `/api/products/{id}`  | Eliminar producto          |
+| GET    | `/products`       | Listar productos               |
+| GET    | `/products/{id}`  | Obtener producto por ID        |
+| POST   | `/products`       | Crear nuevo producto           |
+| PUT    | `/products/{id}`  | Actualizar producto            |
+| DELETE | `/products/{id}`  | Eliminar producto              |
 
 #### 💾 Base de Datos
 

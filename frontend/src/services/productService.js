@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:8080/products"; 
+const API_URL = "http://localhost:8080/products";
 
 export async function getAllProducts() {
   const res = await fetch(API_URL);
@@ -11,6 +11,12 @@ export async function addProduct(product) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(product),
   });
+
+  if (!res.ok) {
+    const errorData = await res.json();
+    throw errorData;
+  }
+
   return await res.json();
 }
 
@@ -25,6 +31,12 @@ export async function updateProduct(id, updatedProduct) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(updatedProduct),
   });
+
+  if (!res.ok) {
+    const errorData = await res.json();
+    throw errorData;
+  }
+
   return await res.json();
 }
 

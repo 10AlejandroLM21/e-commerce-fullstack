@@ -12,7 +12,7 @@ export default function ProductCard({ product }) {
     try {
       await deleteProduct(product.id);
       alert("Producto eliminado");
-      router.refresh();
+      window.location.reload();
     } catch (err) {
       alert("Error al eliminar");
       console.error(err);

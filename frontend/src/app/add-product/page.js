@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 
 export default function AddProduct() {
   const router = useRouter();
+
   const [form, setForm] = useState({
     name: "",
     description: "",
@@ -15,22 +16,35 @@ export default function AddProduct() {
 
   const [errors, setErrors] = useState({});
 
-  const handleChange = (e) => {
+    const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     const newValue = type === "checkbox" ? checked : value;
-    
 
-  if (name === "price") {
-    const numericValue = parseFloat(value);
+    // Validaciones por campo
+    let errorMsg = "";
 
-    if (numericValue < 0) {
-      setErrors({...errors,price: "El precio debe ser un número positivo",});
-      return;
-    } else {
-      setErrors({...errors,price: "",});
+    if (name === "price") {
+      const numericValue = parseFloat(value);
+      if (isNaN(numericValue) && numericValue < 0) {
+        errorMsg = "El precio debe ser un número positivo";
+        setErrors({ ...errors, [name]: errorMsg });
+        return;
+      }
     }
-  }
-      setForm({...form,[name]: newValue,});
+
+    if (name === "name") {
+      if (value.trim().length < 3) {
+        errorMsg = "El nombre debe tener al menos 3 caracteres";
+      }
+    }
+
+    if (name === "description") {
+      if (value.trim().length === 0) {
+        errorMsg = "La descripción no puede estar vacía";
+      }
+    }
+    setErrors({ ...errors, [name]: errorMsg });
+    setForm({ ...form, [name]: newValue });
   };
 
   const handleSubmit = async (e) => {
@@ -40,29 +54,39 @@ export default function AddProduct() {
       alert("Producto agregado correctamente");
       router.push("/");
     } catch (error) {
-      alert("Error al agregar producto");
-      console.error(error);
+      if (error.name || error.price || error.description) {
+        console.log("Error producido back:" + error);
+        setErrors(error);
+      } else {
+        alert("Ocurrió un error inesperado");
+        console.log("Error producido:" + error);
+      }
     }
   };
 
   return (
     <main className="p-6 max-w-6xl mx-auto flex h-screen justify-center items-center">
-      
-      <form 
-        onSubmit={handleSubmit} 
-        className="grid grid-cols-12 gap-4"
-      >
+      <form onSubmit={handleSubmit} className="grid grid-cols-12 gap-4">
         <h2 className="col-span-12 text-4xl font-bold mb-6 text-center">
           Agregar producto
         </h2>
-        {errors.price && <p className="text-red-600 text-sm col-span-12">- {errors.price}</p>}
+        {errors.price && (
+          <p className="text-red-600 text-sm col-span-12">- {errors.price}</p>
+        )}
+        {errors.description && (
+          <p className="text-red-600 text-sm col-span-12">
+            - {errors.description}
+          </p>
+        )}
+        {errors.name && (
+          <p className="text-red-600 text-sm col-span-12">- {errors.name}</p>
+        )}
         <input
           className="col-span-6 p-1 border border-gray-300 rounded"
           name="name"
           placeholder="Nombre"
           value={form.name}
           onChange={handleChange}
-          required
         />
         <input
           className="col-span-12 md:col-span-6 p-2 border border-gray-300 rounded"
@@ -70,7 +94,6 @@ export default function AddProduct() {
           placeholder="Descripción corta"
           value={form.description}
           onChange={handleChange}
-          required
         />
         <input
           className="col-span-6 p-2 border border-gray-300 rounded"
@@ -79,9 +102,7 @@ export default function AddProduct() {
           placeholder="Precio"
           value={form.price}
           onChange={handleChange}
-          required
         />
-        
 
         <label className="col-span-6 flex items-center space-x-2">
           <input

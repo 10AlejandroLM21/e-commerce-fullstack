@@ -2,6 +2,7 @@ package com.example.productapi.controller;
 
 import com.example.productapi.model.Product;
 import com.example.productapi.service.ProductService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,7 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/products")
-@CrossOrigin(origins = "*") // Esto permite llamadas desde el frontend (React)
+@CrossOrigin(origins = "*")
 public class ProductController {
 
     @Autowired
@@ -29,9 +30,9 @@ public class ProductController {
     }
 
     @PostMapping
-    public Product createProduct(@RequestBody Product product) {
+    public ResponseEntity<?> createProduct(@Valid @RequestBody Product product) {
 
-        return productService.createProduct(product);
+        return ResponseEntity.ok(productService.createProduct(product));
     }
 
     @PutMapping("/{id}")

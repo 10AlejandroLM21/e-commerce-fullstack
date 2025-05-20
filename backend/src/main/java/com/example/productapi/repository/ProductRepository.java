@@ -5,7 +5,7 @@ import org.springframework.stereotype.Repository;
 
     @Repository
     public interface ProductRepository extends JpaRepository<Product, Long> {
-        // No hace falta implementar nada, JpaRepository ya tiene todo el CRUD
+        // Uso de JPA para obtener los métodos CRUD
     }
 
 
